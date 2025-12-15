@@ -78,22 +78,12 @@ app.get('/api/stats', async (req, res) => {
 // Register staff on login (without team assignment)
 app.post('/api/staff/register', async (req, res) => {
   try {
-    const { name, email } = req.body;
-
-    // Check if user already exists
-    const existingStaff = await Staff.findOne({ email });
-    if (existingStaff) {
-      return res.json({
-        success: true,
-        staff: existingStaff,
-        message: 'User already registered'
-      });
-    }
+    const { name, department } = req.body;
 
     // Create new staff entry without team assignment
     const newStaff = new Staff({
       name,
-      email,
+      department,
       clickedItem: 'Pending',
       teamId: 0,
       teamName: 'Pending'
@@ -114,7 +104,7 @@ app.post('/api/staff/register', async (req, res) => {
 // Register staff and assign to team
 app.post('/api/staff', async (req, res) => {
   try {
-    const { name, email, clickedItem, staffId } = req.body;
+    const { name, clickedItem, staffId } = req.body;
 
     // Get all existing staff with assigned teams
     const allStaff = await Staff.find({ teamId: { $gt: 0 } });
@@ -155,7 +145,6 @@ app.post('/api/staff', async (req, res) => {
     } else {
       updatedStaff = new Staff({
         name,
-        email,
         clickedItem,
         teamId: assignedTeamId,
         teamName: assignedTeam.label
@@ -178,6 +167,17 @@ app.delete('/api/staff', async (req, res) => {
   try {
     await Staff.deleteMany({});
     res.json({ success: true, message: 'All staff data cleared' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete individual staff member (admin only)
+app.delete('/api/staff/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Staff.findByIdAndDelete(id);
+    res.json({ success: true, message: 'Staff member deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
