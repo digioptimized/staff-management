@@ -299,7 +299,15 @@ function App() {
         ),
         h('div', { className: 'login-footer' },
           h('button', { onClick: showAdminLogin, className: 'admin-link', type: 'button' }, 'Administrator Access'),
-          h('p', {}, 'Developed by Sujith Varghese, CSE Final Year')
+          h('p', { 
+    style: { 
+        color: '#555',          // text color
+        fontSize: '14px',       // font size
+        textAlign: 'center',    // center the text
+        marginTop: '10px',      // spacing from the button
+        fontStyle: 'italic'     // italic text
+    } 
+}, 'Developed by Sujith Varghese, CSE Final Year')
         )
       )
     );
