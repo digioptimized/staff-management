@@ -172,6 +172,17 @@ app.delete('/api/staff', async (req, res) => {
   }
 });
 
+// Delete individual staff member (admin only)
+app.delete('/api/staff/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Staff.findByIdAndDelete(id);
+    res.json({ success: true, message: 'Staff member deleted' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get team configuration
 app.get('/api/teams', (req, res) => {
   res.json(teamItems);

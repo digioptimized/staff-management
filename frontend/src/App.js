@@ -121,7 +121,8 @@ function App() {
       const data = await response.json();
       
       if (data.success) {
-        // Don't set assigned team, just show confirmation
+        // Set assigned team to show on confirmation page
+        setAssignedTeam(data.assignedTeam);
         setCurrentView('confirmation');
       } else {
         setError('Failed to assign team. Please try again.');
@@ -141,6 +142,31 @@ function App() {
     setRegisteredStaffId(null);
     setCurrentView('login');
     setIsAdmin(false);
+  };
+
+  const deleteStaffMember = async (staffId) => {
+    if (!window.confirm('Are you sure you want to delete this entry?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/staff/${staffId}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh staff data and stats
+        fetchStaffData();
+        fetchStats();
+      } else {
+        alert('Failed to delete entry');
+      }
+    } catch (err) {
+      alert('Error deleting entry');
+      console.error('Error:', err);
+    }
   };
 
   // Admin functions
@@ -351,20 +377,30 @@ function App() {
     return h('div', { className: 'view-container' },
       h('div', { className: 'confirmation-card' },
         h('div', { className: 'success-icon' }, '\u2713'),
-        h('h2', null, 'Submission Successful!'),
+        h('h2', null, 'Team Assignment Complete!'),
         h('div', { className: 'assignment-details' },
           h('p', null,
             h('strong', null, 'Name: '),
             currentStaff.name
           ),
           h('p', null,
-            h('strong', null, 'Email: '),
-            currentStaff.email
+            h('strong', null, 'Department: '),
+            currentStaff.department
+          ),
+          assignedTeam && h('p', { className: 'team-assignment' },
+            h('strong', null, 'Assigned to: '),
+            h('span', {
+              style: {
+                color: assignedTeam.color,
+                fontWeight: 'bold',
+                fontSize: '1.3em'
+              }
+            }, `Team ${assignedTeam.label}`)
           )
         ),
         h('div', { className: 'success-message' },
-          h('p', null, 'Your selection has been successfully stored in the database.'),
-          h('p', null, 'Team assignment has been completed. Thank you!')
+          h('p', null, 'Your team assignment has been completed successfully!'),
+          h('p', null, 'Please remember your team color for the event.')
         ),
         h('button', { onClick: resetApp, className: 'btn btn-primary btn-large' }, 'Complete')
       )
@@ -403,7 +439,8 @@ function App() {
                   h('th', null, 'Name'),
                   h('th', null, 'Department'),
                   h('th', null, 'Team'),
-                  h('th', null, 'Date')
+                  h('th', null, 'Date'),
+                  h('th', null, 'Action')
                 )
               ),
               h('tbody', null,
@@ -417,7 +454,14 @@ function App() {
                         style: { backgroundColor: teamItems.find(t => t.id === staff.teamId)?.color }
                       }, staff.teamName)
                     ),
-                    h('td', null, new Date(staff.timestamp).toLocaleDateString())
+                    h('td', null, new Date(staff.timestamp).toLocaleDateString()),
+                    h('td', null,
+                      h('button', {
+                        onClick: () => deleteStaffMember(staff._id),
+                        className: 'btn-delete',
+                        title: 'Delete this entry'
+                      }, '✕')
+                    )
                   )
                 )
               )
