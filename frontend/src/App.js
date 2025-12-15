@@ -246,7 +246,7 @@ function App() {
               h('path', { d: 'M16 3.13a4 4 0 0 1 0 7.75' })
             )
           ),
-          h('h1', { className: 'app-title' }, 'Team Assignment Portal'),
+          h('h1', { className: 'app-title' }, 'Faculty Outing - Team Assignment Portal'),
           h('p', { className: 'subtitle' }, 'Staff Registration & Distribution System')
         ),
         error && h('div', { className: 'error-message' }, error),
@@ -299,6 +299,7 @@ function App() {
         ),
         h('div', { className: 'login-footer' },
           h('button', { onClick: showAdminLogin, className: 'admin-link', type: 'button' }, 'Administrator Access')
+          h('button', { onClick: showAdminLogin, className: 'admin-link', type: 'button' }, 'Developed by Sujith Varghese from CSE Department Final Year')
         )
       )
     );
