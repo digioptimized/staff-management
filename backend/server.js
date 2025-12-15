@@ -11,7 +11,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-vercel-app.vercel.app'] // Update with your Vercel URL after deployment
+    ? ['https://staff-management-ozdp.vercel.app', 'https://staff-management-ikjw.vercel.app']
     : 'http://localhost:3000',
   credentials: true
 }));
