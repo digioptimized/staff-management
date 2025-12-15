@@ -307,7 +307,7 @@ function App() {
         marginTop: '10px',      // spacing from the button
         fontStyle: 'italic'     // italic text
     } 
-}, 'Developed by Sujith Varghese, CSE Final Year')
+}, 'Developed by Sujith Varghese, CSE B Final Year')
         )
       )
     );
