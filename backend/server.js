@@ -10,9 +10,17 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.NODE_ENV?.toLowerCase() === 'production' 
-    ? ['https://staff-management-ozdp.vercel.app', 'https://staff-management-ikjw.vercel.app', 'https://staff-management-ddlv.vercel.app']
-    : 'http://localhost:3000',
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    // Allow all Vercel URLs and localhost
+    if (origin.includes('vercel.app') || origin === 'http://localhost:3000') {
+      return callback(null, true);
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 app.use(bodyParser.json());
