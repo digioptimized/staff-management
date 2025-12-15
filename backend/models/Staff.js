@@ -6,11 +6,10 @@ const staffSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  email: {
+  department: {
     type: String,
     required: true,
-    trim: true,
-    lowercase: true
+    enum: ['CVL', 'AIDS', 'BME', 'CME', 'CSE', 'EEE', 'ECE', 'S&H', 'MHT', 'MAE', 'MECH', 'IT']
   },
   clickedItem: {
     type: String,

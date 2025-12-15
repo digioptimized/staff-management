@@ -7,7 +7,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 function App() {
   const [currentView, setCurrentView] = useState('login');
-  const [currentStaff, setCurrentStaff] = useState({ name: '', email: '' });
+  const [currentStaff, setCurrentStaff] = useState({ name: '', department: '' });
   const [registeredStaffId, setRegisteredStaffId] = useState(null);
   const [teamItems, setTeamItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -46,7 +46,7 @@ function App() {
     setError('');
     setLoading(true);
     
-    if (currentStaff.name.trim() && currentStaff.email.trim()) {
+    if (currentStaff.name.trim() && currentStaff.department) {
       try {
         // Register user in MongoDB on login
         const response = await fetch(`${API_URL}/staff/register`, {
@@ -56,7 +56,7 @@ function App() {
           },
           body: JSON.stringify({
             name: currentStaff.name,
-            email: currentStaff.email
+            department: currentStaff.department
           })
         });
 
@@ -246,7 +246,7 @@ function App() {
               h('path', { d: 'M16 3.13a4 4 0 0 1 0 7.75' })
             )
           ),
-          h('h1', { className: 'app-title' }, 'Team Assignment Portal'),
+          h('h1', { className: 'app-title' }, 'Faculty Outing - Team Assignment Portal'),
           h('p', { className: 'subtitle' }, 'Staff Registration & Distribution System')
         ),
         error && h('div', { className: 'error-message' }, error),
@@ -271,23 +271,35 @@ function App() {
             })
           ),
           h('div', { className: 'form-group' },
-            h('label', { htmlFor: 'email', className: 'form-label' },
+            h('label', { htmlFor: 'department', className: 'form-label' },
               h('svg', { className: 'label-icon', viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2' },
-                h('path', { d: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z' }),
-                h('polyline', { points: '22,6 12,13 2,6' })
+                h('path', { d: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' }),
+                h('polyline', { points: '9,22 9,12 15,12 15,22' })
               ),
-              'Email Address'
+              'Department'
             ),
-            h('input', {
-              type: 'email',
-              id: 'email',
+            h('select', {
+              id: 'department',
               className: 'form-input',
-              value: currentStaff.email,
-              onChange: (e) => setCurrentStaff({ ...currentStaff, email: e.target.value }),
-              required: true,
-              placeholder: 'yourname@organization.com',
-              autoComplete: 'email'
-            })
+              value: currentStaff.department,
+              onChange: (e) => setCurrentStaff({ ...currentStaff, department: e.target.value }),
+              required: true
+            },
+              h('option', { value: '', disabled: true }, 'Select your department'),
+              h('option', { value: 'CSE' }, 'CSE - Computer Science & Engineering'),
+              h('option', { value: 'CVL' }, 'CVL - Civil Engineering'),
+              h('option', { value: 'AIDS' }, 'AIDS - Artificial Intelligence & Data Science'),
+              h('option', { value: 'BME' }, 'BME - Biomedical Engineering'),
+              h('option', { value: 'CME' }, 'CME - Chemical  Engineering'),
+              
+              h('option', { value: 'EEE' }, 'EEE - Electrical & Electronics Engineering'),
+              h('option', { value: 'ECE' }, 'ECE - Electronics & Communication Engineering'),
+              h('option', { value: 'S&H' }, 'S&H - Science & Humanities'),
+              h('option', { value: 'MHT' }, 'MHT - Mechatronics'),
+              h('option', { value: 'MAE' }, 'MAE - Mechanical Automation Engineering'),
+              h('option', { value: 'MECH' }, 'MECH - Mechanical Engineering'),
+              h('option', { value: 'IT' }, 'IT - Information Technology')
+            )
           ),
           h('button', { type: 'submit', className: 'btn btn-primary btn-large' },
             loading ? 'Registering...' : 'Continue to Team Selection',
@@ -298,7 +310,8 @@ function App() {
           )
         ),
         h('div', { className: 'login-footer' },
-          h('button', { onClick: showAdminLogin, className: 'admin-link', type: 'button' }, 'Administrator Access')
+          h('button', { onClick: showAdminLogin, className: 'admin-link', type: 'button' }, 'Administrator Access'),
+          h('p', { className: 'footer-credit' }, 'Developed by CSE Department | Agni College of Technology')
         )
       )
     );
@@ -388,7 +401,7 @@ function App() {
               h('thead', null,
                 h('tr', null,
                   h('th', null, 'Name'),
-                  h('th', null, 'Email'),
+                  h('th', null, 'Department'),
                   h('th', null, 'Team'),
                   h('th', null, 'Date')
                 )
@@ -397,7 +410,7 @@ function App() {
                 staffData.map((staff, index) =>
                   h('tr', { key: index },
                     h('td', null, staff.name),
-                    h('td', null, staff.email),
+                    h('td', null, staff.department),
                     h('td', null,
                       h('span', {
                         className: 'team-badge',
