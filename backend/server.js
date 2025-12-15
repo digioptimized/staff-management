@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
+  origin: process.env.NODE_ENV?.toLowerCase() === 'production' 
     ? ['https://staff-management-ozdp.vercel.app', 'https://staff-management-ikjw.vercel.app', 'https://staff-management-ddlv.vercel.app']
     : 'http://localhost:3000',
   credentials: true
