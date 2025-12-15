@@ -299,7 +299,6 @@ function App() {
         ),
         h('div', { className: 'login-footer' },
           h('button', { onClick: showAdminLogin, className: 'admin-link', type: 'button' }, 'Administrator Access')
-          h('button', { onClick: showAdminLogin, className: 'admin-link', type: 'button' }, 'Developed by Sujith Varghese from CSE Department Final Year')
         )
       )
     );
